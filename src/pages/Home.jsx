@@ -98,15 +98,26 @@ export default function Home() {
     a.click()
   }
 
-  const generateDualQRCode = async () => {
+  const loadDemo = () => {
+    const demoUrl1 = 'https://google.com'
+    const demoUrl2 = 'https://youtube.com'
+    setUrl1(demoUrl1)
+    setUrl2(demoUrl2)
+    generateDualQRCode({ overrideUrl1: demoUrl1, overrideUrl2: demoUrl2 })
+  }
+
+  const generateDualQRCode = async ({ overrideUrl1, overrideUrl2 } = {}) => {
     try {
-      if (!url1 || !url2) {
+      const inputUrl1 = overrideUrl1 ?? url1
+      const inputUrl2 = overrideUrl2 ?? url2
+
+      if (!inputUrl1 || !inputUrl2) {
         setError('Please enter both URLs')
         return
       }
       setError('')
 
-      const version = resolveQrVersion(url1, url2, qrVersion)
+      const version = resolveQrVersion(inputUrl1, inputUrl2, qrVersion)
       if (version === null) {
         setError('URLs are too long to fit in any QR code version')
         return
@@ -114,8 +125,8 @@ export default function Home() {
       setQrVersion(version)
 
       const qrOptions = { errorCorrectionLevel: ERROR_CORRECTION_LEVEL, version }
-      const qr1Data = await QRCode.create(url1, qrOptions)
-      const qr2Data = await QRCode.create(url2, qrOptions)
+      const qr1Data = await QRCode.create(inputUrl1, qrOptions)
+      const qr2Data = await QRCode.create(inputUrl2, qrOptions)
 
       const moduleCount = qr1Data.modules.size
       const cellSize = 10
@@ -194,7 +205,12 @@ export default function Home() {
   return (
     <main className="app-main">
       <section className="controls-panel panel">
-        <h2 className="panel-title">Configuration</h2>
+        <div className="panel-header">
+          <h2 className="panel-title">Configuration</h2>
+          <button type="button" className="btn-demo" onClick={loadDemo}>
+            Try Demo
+          </button>
+        </div>
 
         <div className="field">
           <label htmlFor="url1" className="field-label">URL 1</label>
@@ -269,7 +285,7 @@ export default function Home() {
           </div>
         )}
 
-        <button type="button" className="btn-primary" onClick={generateDualQRCode}>
+        <button type="button" className="btn-primary" onClick={() => generateDualQRCode()}>
           Generate QR Code
         </button>
       </section>

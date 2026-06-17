@@ -286,6 +286,30 @@
   background: rgba(34, 211, 238, 0.08);
 }
 
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.btn-demo {
+  padding: 0.4rem 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--bg);
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-demo:hover {
+  background: var(--accent-hover);
+}
+
 /* Error alert */
 .error-alert {
   padding: 0.625rem 0.75rem;
